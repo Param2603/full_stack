@@ -310,10 +310,18 @@ export const changePassword = async(req, res) => {
         if(!newPassword || !confirmPassword){
             return res.status(400).json({
                 success: false,
-                message: "Password is not match"
+                message: "All fields are required"
             })
         }
-        const hashedPassword = bcrypt.hash(newPassword, 10)
+
+        if(newPassword !== confirmPassword){
+            return res.status(400).json({
+                success: false,
+                message: "Password do not match"
+            })
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword, 10)
         user.password = hashedPassword
         await user.save()
         return res.status(200).json({
@@ -328,5 +336,22 @@ export const changePassword = async(req, res) => {
     }
 }
 
+export const allUser = async(req, res) => {
+    try {
+        const Users = await User.find()
+        return res.status(200).json({
+            success: true,
+            Users
+        })
+        
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        })
+        
+    }
+}
+ 
 
 

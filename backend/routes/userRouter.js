@@ -1,6 +1,6 @@
 import express from 'express'
-import { changePassword, forgotPassword, login, logout, register, reVerify, verify, verifyOTP } from '../controllers/userController.js'
-import { isAuthenticated } from '../middleware/isAuthenticated.js'
+import { allUser, changePassword, forgotPassword, login, logout, register, reVerify, verify, verifyOTP } from '../controllers/userController.js'
+import { isAdmin, isAuthenticated } from '../middleware/isAuthenticated.js'
 
 const userRouter = express.Router()
 
@@ -11,6 +11,7 @@ userRouter.post('/login', login)
 userRouter.post('/logout', isAuthenticated, logout)
 userRouter.post('/forgot-password', forgotPassword)
 userRouter.post('/verify-otp/:email', verifyOTP) 
-userRouter.post('/change-password', changePassword)
+userRouter.post('/change-password/:email', changePassword)
+userRouter.get('/all-user', isAuthenticated, isAdmin, allUser)
  
 export default userRouter
