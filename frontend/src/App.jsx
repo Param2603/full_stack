@@ -7,13 +7,14 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Verify from './pages/Verify'
 import VerifyEmail from './pages/VerifyEmail'
+import Footer from './components/ui/Footer'
 
 const App = () => {
   return (
     <div>
       <Routes>
-        <Route path='/navbar' element={<Navbar/>}/>
-        <Route path='/' element={<Home/>}/>
+        {/* <Navbar/> */}
+        <Route path='/' element={<><Navbar/><Home/><Footer/></>}/>
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/login' element={<Login/>}/>
        <Route path="/verify" element={<Verify />} />

@@ -1,8 +1,14 @@
+import Features from '@/components/ui/Features'
+import Footer from '@/components/ui/Footer'
+import Hero from '@/components/ui/Hero'
 import React from 'react'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <Hero/>
+      <Features/>
+    </div>
   )
 }
 

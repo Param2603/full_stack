@@ -10,7 +10,7 @@ const Verify = () => {
             </div>
         </div>
     </div>
-  )
+  ) 
 }
 
 export default Verify

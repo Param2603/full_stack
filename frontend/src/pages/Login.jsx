@@ -117,6 +117,9 @@ const Login = () => {
         <Button onClick={submitHandle} type="submit" className="w-full cursor-pointer bg-pink-600 hover:bg-pink-500">
          {loading? <><Loader2 className='w-4 h-4 animate-spin mr-2'/>Please Wait</> : 'Login'} 
         </Button>
+        <Button variant="outline" className="w-full cursor-pointer">
+          Login with Google
+        </Button>
         <p className='text-gray-700 text-sm'>Don't have an account? <Link to={'/signup'} className='hover:underline cursor-pointer text-pink-800'>Signup</Link></p>
       </CardFooter>
     </Card>       
