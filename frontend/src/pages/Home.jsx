@@ -1,5 +1,4 @@
 import Features from '@/components/ui/Features'
-import Footer from '@/components/ui/Footer'
 import Hero from '@/components/ui/Hero'
 import React from 'react'
 

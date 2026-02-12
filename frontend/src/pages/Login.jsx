@@ -15,6 +15,8 @@ import { Eye, EyeOff, Loader2 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
 import axios from 'axios'
 import { toast } from 'sonner'
+import { useDispatch } from 'react-redux'
+import { setUser } from '@/redux/userSlice'
 
 const Login = () => {
     const [showPassword, setShowPassword] = useState(false)
@@ -24,6 +26,7 @@ const Login = () => {
         password:""
     })
     const navigate = useNavigate()
+    const dispatch = useDispatch() //send data in store
 
     const handleChange = (e)=>{
         const {name, value} = e.target
@@ -51,8 +54,11 @@ const Login = () => {
     )
 
     if (res.data.success) {
-      toast.success(res.data.message)
       navigate('/') 
+      dispatch(setUser(res.data.user))
+      localStorage.setItem("accessToken", res.data.accessToken)
+      toast.success(res.data.message)
+
     }
   } catch (err) {
     console.log(err)

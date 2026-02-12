@@ -20,11 +20,11 @@ const Footer = () => {
             <div className='mb-6 md:mb-0'>
                 <h3 className='text-xl font-semibold'>Customer Service</h3>
                 <ul className='mt-2 text-sm space-y-2'>
-                    <l1>Contact Us</l1> <br />
-                    <l1>Shipping & Returns</l1> <br />
-                    <l1>FAQs</l1> <br />
-                    <l1>Order Tracking</l1> <br />
-                    <l1>Size Guide</l1>
+                    <li>Contact Us</li> 
+                    <li>Shipping & Returns</li> 
+                    <li>FAQs</li> 
+                    <li>Order Tracking</li> 
+                    <li>Size Guide</li>
                 </ul>
             </div> 
             
@@ -48,7 +48,7 @@ const Footer = () => {
         </div>
     </div>
     <div className='mt-8 border-t border-gray-700 pt-6 text-center text-sm '>
-        <p>&copy; {new Date().getFullYear} <span className='text-pink-600'>Ekart</span>. All rights reserved</p>
+        <p>&copy; {new Date().getFullYear()} <span className='text-pink-600'>Ekart</span>. All rights reserved</p>
     </div>
     </footer>
   )
