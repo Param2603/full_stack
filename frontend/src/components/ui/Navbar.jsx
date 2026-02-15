@@ -40,7 +40,7 @@ const Navbar = () => {
           <Link to={'/'}> <li>Home</li></Link>
           <Link to={'/products'}><li>Products</li></Link>
           {
-            user && <Link to={'/profile'}> <li>Hello,{user.name}</li></Link>
+            user && <Link to={`/profile/${user._id}`}> <li>Hello,{user.name}</li></Link>
           }
           </ul>
         <Link to={'/cart'} className='relative'>

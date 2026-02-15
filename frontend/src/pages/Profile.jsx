@@ -1,12 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router'
 
 
 const Profile = () => {
+  const {user} = useSelector(store => store.user)
+  const params = useParams()
+  const userId = params.userId
+  const [updateUser, setUpdateUser] = useState({
+    name: user?.name,
+    email: user?.email,
+    phoneNo: user?.phoneNo,
+    address: user?.address,
+    city: user?.city,
+    zipCode: user?.zipCode,
+    profilePic: user?.profilePic,
+    role: user?.role
+  })
+
+  const [file, setFile] = useState(null)
+  const handleChange = (e) => {
+    
+  }
   return (
     <div className='pt-20 min-h-screen bg-gray-100'>
         <Tabs defaultValue="profile" className='max-w-7xl mx-auto items-center'>
