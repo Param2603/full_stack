@@ -378,13 +378,17 @@ export const getUserById = async(req, res) => {
     }
 }
 
-export const updateUser = async(req, res) => {
+
+export const updateUser = async (req, res) => {
     try {
-        const userIdToUpdate = req.params.id //id of user want to update
-        const loggedInUser = req.user //from isAuthenticated middleware
+        const userIdToUpdate = req.params.id
+        const loggedInUser = req.user
         const { name, address, city, zipCode, phoneNo, role } = req.body
 
-        if(loggedInUser._id.toString() !== userIdToUpdate && loggedInUser.role !== 'admin'){
+        if (
+            loggedInUser._id.toString() !== userIdToUpdate &&
+            loggedInUser.role !== "admin"
+        ) {
             return res.status(403).json({
                 success: false,
                 message: "You are not allowed to update this profile"
@@ -392,47 +396,51 @@ export const updateUser = async(req, res) => {
         }
 
         let user = await User.findById(userIdToUpdate)
-        if(!user){
+        if (!user) {
             return res.status(404).json({
                 success: false,
                 message: "User not found"
             })
         }
 
-        let profilePicUrl = user.profilePic;
-        let profilePicPublicId = user.profilePicPublicId;
+        let profilePicUrl = user.profilePic
+        let profilePicPublicId = user.profilePicPublicId
 
-        //if new file is uploaded
-        if(req.file){
-            if(profilePicPublicId){
+        // if new file uploaded
+        if (req.file) {
+
+            if (profilePicPublicId) {
                 await cloudinary.uploader.destroy(profilePicPublicId)
             }
 
             const uploadResult = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.update_stream(
-                    {folder: "profiles"},
+                const stream = cloudinary.uploader.upload_stream(
+                    { folder: "profiles" },
                     (error, result) => {
-                        if(error) reject(error)
-                            else resolve(result)
+                        if (error) reject(error)
+                        else resolve(result)
                     }
                 )
                 stream.end(req.file.buffer)
             })
-            profilePicUrl = uploadResult.secure_url;
+
+            profilePicUrl = uploadResult.secure_url
             profilePicPublicId = uploadResult.public_id
         }
 
-        //update fields
-        user.name = name || user.name;
-        user.address = address || user.address;
-        user.city = city || user.city;
-        user.zipCode = zipCode || user.zipCode;
-        user.phoneNo = phoneNo || user.phoneNo;
-        user.role = role;
-        user.profilePic = profilePicUrl;
-        user.profilePicPublicId =profilePicPublicId
-        
+        // update fields (no logic change)
+        user.name = name || user.name
+        user.address = address || user.address
+        user.city = city || user.city
+        user.zipCode = zipCode || user.zipCode
+        user.phoneNo = phoneNo || user.phoneNo
+        if (role) user.role = role
+
+        user.profilePic = profilePicUrl
+        user.profilePicPublicId = profilePicPublicId
+
         const updatedUser = await user.save()
+
         return res.status(200).json({
             success: true,
             message: "Profile Updated Successfully",
@@ -440,9 +448,80 @@ export const updateUser = async(req, res) => {
         })
 
     } catch (err) {
+        console.log("Update Error:", err)
         return res.status(500).json({
             success: false,
             message: err.message
         })
     }
-} 
+}
+
+
+// export const updateUser = async(req, res) => {
+//     try {
+//         const userIdToUpdate = req.params.id //id of user want to update
+//         const loggedInUser = req.user //from isAuthenticated middleware
+//         const { name, address, city, zipCode, phoneNo, role } = req.body
+
+//         if(loggedInUser._id.toString() !== userIdToUpdate && loggedInUser.role !== 'admin'){
+//             return res.status(403).json({
+//                 success: false,
+//                 message: "You are not allowed to update this profile"
+//             })
+//         }
+
+//         let user = await User.findById(userIdToUpdate)
+//         if(!user){
+//             return res.status(404).json({
+//                 success: false,
+//                 message: "User not found"
+//             })
+//         }
+
+//         let profilePicUrl = user.profilePic;
+//         let profilePicPublicId = user.profilePicPublicId;
+
+//         //if new file is uploaded
+//         if(req.file){
+//             if(profilePicPublicId){
+//                 await cloudinary.uploader.destroy(profilePicPublicId)
+//             }
+
+//             const uploadResult = await new Promise((resolve, reject) => {
+//                 const stream = cloudinary.uploader.upload_stream(
+//                     {folder: "profiles"},
+//                     (error, result) => {
+//                         if(error) reject(error)
+//                             else resolve(result)
+//                     }
+//                 )
+//                 stream.end(req.file.buffer)
+//             })
+//             profilePicUrl = uploadResult.secure_url;
+//             profilePicPublicId = uploadResult.public_id
+//         }
+
+//         //update fields
+//         user.name = name || user.name;
+//         user.address = address || user.address;
+//         user.city = city || user.city;
+//         user.zipCode = zipCode || user.zipCode;
+//         user.phoneNo = phoneNo || user.phoneNo;
+//         user.role = role;
+//         user.profilePic = profilePicUrl;
+//         user.profilePicPublicId =profilePicPublicId
+        
+//         const updatedUser = await user.save()
+//         return res.status(200).json({
+//             success: true,
+//             message: "Profile Updated Successfully",
+//         })
+
+//     } catch (err) {
+//         return res.status(500).json({
+//             success: false,
+//             message: err.message
+//         })
+//     }
+// } 
+
