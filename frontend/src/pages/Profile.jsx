@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -30,6 +30,22 @@ const [updateUser, setUpdateUser] = useState({
   const [file, setFile] = useState(null)
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch()
+
+  // Sync form state with Redux user data when it loads
+  useEffect(() => {
+    if (user) {
+      setUpdateUser({
+        name: user.name || "",
+        email: user.email || "",
+        phoneNo: user.phoneNo || "",
+        address: user.address || "",
+        city: user.city || "",
+        zipCode: user.zipCode || "",
+        profilePic: user.profilePic || "",
+        role: user.role || ""
+      })
+    }
+  }, [user])
 
   const handleChange = (e) => {
     setUpdateUser({...updateUser, [e.target.name]:e.target.value})

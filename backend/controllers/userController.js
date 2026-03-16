@@ -408,36 +408,35 @@ export const updateUser = async (req, res) => {
 
         // if new file uploaded
         if (req.file) {
+           
+                if (profilePicPublicId) {
+                    await cloudinary.uploader.destroy(profilePicPublicId)
+                }
 
-            if (profilePicPublicId) {
-                await cloudinary.uploader.destroy(profilePicPublicId)
-            }
+                const uploadResult = await new Promise((resolve, reject) => {
+                    const stream = cloudinary.uploader.upload_stream(
+                        { folder: "profiles" },
+                        (error, result) => {
+                            if (error) reject(error)
+                            else resolve(result)
+                        }
+                    )
+                    stream.end(req.file.buffer)
+                })
 
-            const uploadResult = await new Promise((resolve, reject) => {
-                const stream = cloudinary.uploader.upload_stream(
-                    { folder: "profiles" },
-                    (error, result) => {
-                        if (error) reject(error)
-                        else resolve(result)
-                    }
-                )
-                stream.end(req.file.buffer)
-            })
+                profilePicUrl = uploadResult.secure_url
+                profilePicPublicId = uploadResult.public_id
+            } 
+            user.name = name || user.name
+            user.address = address || user.address
+            user.city = city || user.city
+            user.zipCode = zipCode || user.zipCode
+            user.phoneNo = phoneNo || user.phoneNo
+            user.role = role;
+            // if (role) user.role = role
 
-            profilePicUrl = uploadResult.secure_url
-            profilePicPublicId = uploadResult.public_id
-        }
-
-        // update fields (no logic change)
-        user.name = name || user.name
-        user.address = address || user.address
-        user.city = city || user.city
-        user.zipCode = zipCode || user.zipCode
-        user.phoneNo = phoneNo || user.phoneNo
-        if (role) user.role = role
-
-        user.profilePic = profilePicUrl
-        user.profilePicPublicId = profilePicPublicId
+            user.profilePic = profilePicUrl
+            user.profilePicPublicId = profilePicPublicId
 
         const updatedUser = await user.save()
 
@@ -446,7 +445,8 @@ export const updateUser = async (req, res) => {
             message: "Profile Updated Successfully",
             user: updatedUser
         })
-
+        // update fields (no logic change)
+        
     } catch (err) {
         console.log("Update Error:", err)
         return res.status(500).json({
