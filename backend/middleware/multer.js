@@ -1,8 +1,8 @@
 import multer from "multer"
-
 const storage = multer.memoryStorage()
 
-//single upload
+// single upload
 export const singleUpload = multer({ storage }).single("file")
-//Multiple upload upto 5 images
-export const multipleUpload = multer({ storage }).array("files", 5)
+
+// ✅ FIXED: field name must be "images"
+export const multipleUpload = multer({ storage }).array("images", 5)
