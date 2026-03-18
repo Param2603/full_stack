@@ -1,5 +1,5 @@
-import Features from '@/components/ui/Features'
-import Hero from '@/components/ui/Hero'
+import Features from '@/components/Features'
+import Hero from '@/components/Hero'
 import React from 'react'
 
 const Home = () => {
