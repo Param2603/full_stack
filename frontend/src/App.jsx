@@ -9,6 +9,7 @@ import Footer from './components/Footer'
 import Profile from './pages/Profile'
 import Products from './pages/Products'
 import Navbar from './components/Navbar'
+import Cart from './pages/Cart'
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/verify/:token" element={<VerifyEmail />} />  
         <Route path="/profile/:userId" element={<><Navbar/><Profile /></>} />  
         <Route path='/products' element={<><Navbar/><Products/></>}/>
+        <Route path='/cart' element={<><Navbar/><Cart/></>}/>
 
       </Routes>
 

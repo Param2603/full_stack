@@ -22,6 +22,7 @@ const Products = () => {
     const [category, setCategory] = useState("All")
     const [brand, setBrand] = useState("All")
     const [priceRange, setPriceRange] = useState([0, 999999])
+    const [sortOrder, setSortOrder] = useState('')
     const dispatch = useDispatch()
 
     const getAllProducts = async() => {
@@ -42,6 +43,32 @@ const Products = () => {
     }
 
     useEffect(() => {
+        if(allProducts.length === 0) return
+        let filtered = [...allProducts]
+
+        if(search.trim() !== ""){
+            filtered = filtered.filter(p => p.productName?.toLowerCase().includes(search.toLowerCase()))
+        }
+
+        if(category !== "All"){
+            filtered = filtered.filter(p => p.category === category)
+        }
+
+        if(brand !== "All"){
+            filtered = filtered.filter(p => p.brand === brand)
+        }
+
+        filtered = filtered.filter(p => p.productPrice >= priceRange[0] && p.productPrice <= priceRange[1])
+
+        if(sortOrder === "lowToHigh"){
+            filtered.sort((a,b) => a.productPrice - b.productPrice)
+        } else if(sortOrder === "highToLow"){
+            filtered.sort((a,b) => b.productPrice - a.productPrice)
+        }
+        dispatch(setProducts(filtered))
+    },[search, category, brand, sortOrder, priceRange, allProducts, dispatch])
+
+    useEffect(() => {
         getAllProducts()
     },[])
 
@@ -57,13 +84,13 @@ const Products = () => {
             {/* Main product section */}
             <div className='flex flex-col flex-1'>
                 <div className='flex justify-end mb-5'>
-                    <Select>
+                    <Select onValueChange={(value) => setSortOrder(value)}>
                         <SelectTrigger className="w-[200px] bg-white">
                         <SelectValue placeholder="Sort by Price" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectItem value="lowtoHigh">Price: Low to High</SelectItem>
+                                <SelectItem value="lowToHigh">Price: Low to High</SelectItem>
                                 <SelectItem value="highToLow">Price: High to Low</SelectItem>
                             </SelectGroup>
                         </SelectContent>
@@ -72,7 +99,7 @@ const Products = () => {
                 {/* product grid */}
                 <div className='grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-7'>
                     {
-                        allProducts.map((product) => {
+                        products.map((product) => {
                             return <ProductCard key={product._id} product={product} loading={loading}/>
                         })
                     }
