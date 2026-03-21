@@ -10,6 +10,7 @@ import { toast } from 'sonner'
 const Navbar = () => {
   // const user = true
   const {user} = useSelector(store => store.user)
+  const {cart} = useSelector(store => store.product)
   const accessToken = localStorage.getItem('accessToken')
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -29,6 +30,8 @@ const Navbar = () => {
       console.log(err) 
     }
   }
+  // console.log(cart)
+  
   return (
    <header className='bg-pink-50 fixed w-full z-20 border-b border-pink-200'>
   <div className='max-w-7xl mx-auto flex items-center justify-between px-5 py-3'>
@@ -59,7 +62,7 @@ const Navbar = () => {
       <Link to={'/cart'} className='relative flex items-center'>
         <ShoppingCart className='text-2xl' />
         <span className='bg-pink-500 rounded-full absolute text-white -top-2 -right-3 px-2 text-xs'>
-          0
+          {cart.items.length}
         </span>
       </Link>
 

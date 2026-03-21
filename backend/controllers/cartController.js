@@ -65,7 +65,7 @@ export const addToCart = async(req, res) => {
 
             // Recalculate total price
             cart.totalPrice = cart.items.reduce(
-                (acc, item) => acc + item.price * item.quantity
+                (acc, item) => acc + item.price * item.quantity, 0
             )
         }
 
@@ -140,6 +140,8 @@ export const removeFromCart = async(req, res) => {
 
         cart.items = cart.items.filter(item => item.productId.toString() !== productId)
         cart.totalPrice = cart.items.reduce((acc, item) => acc + item.price * item.quantity, 0)
+
+        cart = await cart.populate("items.productId")
 
         await cart.save()
         res.status(200).json({
