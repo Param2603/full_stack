@@ -2,60 +2,78 @@ import Product from "../models/productModel.js";
 import cloudinary from "../utils/cloudinary.js";
 import getDataUri from "../utils/dataUri.js";
 
-export const addProduct = async(req,res) => {
-    try {
-        const {productName, productDesc, productPrice, category, brand} = req.body;
-        const userId = req.id;
+export const addProduct = async (req, res) => {
+  try {
+    const { productName, productDesc, productPrice, category, brand } = req.body;
+    const userId = req.id;
 
-        if(!productName || !productDesc || !productPrice || !category || !brand){
-            return res.status(400).json({
-                success: false,
-                message: "All fields are required"
-            })
-        }
-        
-        // it can handle multiple image can upload
-        let productImg = [];
+    // ✅ Validate fields
+    if (!productName || !productDesc || !productPrice || !category || !brand) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required"
+      });
+    }
 
-if (req.files && req.files.length > 0) {
+    // ✅ Check images
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload at least one image"
+      });
+    }
+
+    let productImg = [];
+
+    // ✅ Upload images to cloudinary
     for (let file of req.files) {
-        const fileUri = getDataUri(file);
+      if (!file) continue;
 
-        const result = await cloudinary.uploader.upload(fileUri, {
-            folder: "mern_products"
+      const fileUri = getDataUri(file);
+
+      if (!fileUri) {
+        return res.status(400).json({
+          success: false,
+          message: "Image processing failed"
         });
+      }
 
-        productImg.push({
-            url: result.secure_url,
-            public_id: result.public_id
-        });
+      const result = await cloudinary.uploader.upload(fileUri, {
+        folder: "mern_products"
+      });
+
+      productImg.push({
+        url: result.secure_url,
+        public_id: result.public_id
+      });
     }
-}
 
-        //create a product in a DB
-        const newProduct = await Product.create({
-            userId,
-            productName,
-            productDesc,
-            productPrice,
-            category,
-            brand,
-            productImg
-        })
+    // ✅ Create product
+    const newProduct = await Product.create({
+      userId,
+      productName,
+      productDesc,
+      productPrice,
+      category,
+      brand,
+      productImg
+    });
 
-        return res.status(200).json({
-            success: true,
-            message: "Product added Successfully",
-            product:newProduct
-        })
+    return res.status(200).json({
+      success: true,
+      message: "Product added Successfully",
+      product: newProduct
+    });
 
-    } catch (error) {
-        return res.status(500).json({
-            success: false,
-            message: error.message
-        })   
-    }
-}
+  } catch (error) {
+    console.log("ERROR:", error); // ✅ Debug
+
+    return res.status(500).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
 
 export const getAllProduct = async(_, res) => {
     try {

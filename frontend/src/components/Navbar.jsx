@@ -12,6 +12,7 @@ const Navbar = () => {
   const {user} = useSelector(store => store.user)
   const {cart} = useSelector(store => store.product)
   const accessToken = localStorage.getItem('accessToken')
+  const admin = user?.role === "admin" ? true : false
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -31,7 +32,7 @@ const Navbar = () => {
     }
   }
   // console.log(cart)
-  
+
   return (
    <header className='bg-pink-50 fixed w-full z-20 border-b border-pink-200'>
   <div className='max-w-7xl mx-auto flex items-center justify-between px-5 py-3'>
@@ -55,6 +56,9 @@ const Navbar = () => {
               <li className='cursor-pointer'>Hello, {user.name}</li>
             </Link>
           )
+        }
+        {
+          admin && <Link to={`/dashboard/sales`}><li>Dashboard</li></Link>
         }
       </ul>
 

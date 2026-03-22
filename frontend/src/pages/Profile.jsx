@@ -101,7 +101,7 @@ const [updateUser, setUpdateUser] = useState({
   }
 
   return (
-    <div className='pt-20 min-h-screen bg-gray-100'>
+    <div className='pt-25 min-h-screen bg-gray-100'>
         <Tabs defaultValue="profile" className='max-w-7xl mx-auto items-center'>
         
         <TabsList>
@@ -111,8 +111,8 @@ const [updateUser, setUpdateUser] = useState({
 
         {/* Profile Tab */}
         <TabsContent value="profile">
-            <div className='flex flex-col justify-center items-center bg-gray-100 min-h-screen'>
-                <h1 className='font-bold mb-7 text-2xl text-gray-800'>Update Profile</h1>
+            <div className='flex flex-col pb-25 justify-center items-center bg-gray-100 min-h-screen'>
+                <h1 className='font-bold mb-5 text-2xl text-gray-800'>Update Profile</h1>
 
                 <div className='w-full flex gap-10 justify-between items-start px-7'>
                     

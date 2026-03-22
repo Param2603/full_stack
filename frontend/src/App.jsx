@@ -36,7 +36,7 @@ const App = () => {
         <Route path='/products/:id' element={<><Navbar/><SingleProduct/></>}/>
         <Route path='/cart' element={<ProtectedRoute><Navbar/><Cart/></ProtectedRoute>}/>
 
-        <Route path='/dashboard' element={<ProtectedRoute adminOnly={true}><Dashboard /></ProtectedRoute>}>
+        <Route path='/dashboard' element={<ProtectedRoute adminOnly={true}><Navbar/><Dashboard /></ProtectedRoute>}>
           <Route path="sales" element={<AdminSales />} />
           <Route path="add-product" element={<AddProduct/>} />
           <Route path="products" element={<AdminProduct />} />
