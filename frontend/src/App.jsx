@@ -20,6 +20,7 @@ import AdminOrders from './pages/admin/AdminOrders'
 import AdminUsers from './pages/admin/AdminUsers'
 import ShowUserOrders from './pages/admin/ShowUserOrders'
 import UserInfo from './pages/admin/UserInfo'
+import AddressForm from './pages/AddressForm'
 
 const App = () => {
   return (
@@ -35,6 +36,7 @@ const App = () => {
         <Route path='/products' element={<><Navbar/><Products/></>}/>
         <Route path='/products/:id' element={<><Navbar/><SingleProduct/></>}/>
         <Route path='/cart' element={<ProtectedRoute><Navbar/><Cart/></ProtectedRoute>}/>
+        <Route path='/address' element={<ProtectedRoute><AddressForm/></ProtectedRoute>}/>
 
         <Route path='/dashboard' element={<ProtectedRoute adminOnly={true}><Navbar/><Dashboard /></ProtectedRoute>}>
           <Route path="sales" element={<AdminSales />} />

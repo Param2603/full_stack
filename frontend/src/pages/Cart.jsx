@@ -191,7 +191,7 @@ const Cart = () => {
                       </Button>
                     </div>
 
-                    <Button className='w-full bg-pink-600 hover:bg-pink-700 text-white'>
+                    <Button onClick={() => navigate('/address')} className='w-full bg-pink-600 hover:bg-pink-700 text-white'>
                       PLACE ORDER
                     </Button>
 

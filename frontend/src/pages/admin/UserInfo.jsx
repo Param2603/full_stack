@@ -4,15 +4,30 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import UserLogo from "../../assets/user.png"
 import { Label } from '@/components/ui/label'
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Input } from '@/components/ui/input'
-import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import axios from 'axios'
+import { toast } from 'sonner'
+import { setUser } from '@/redux/userSlice'
 
 const UserInfo = () => {
   const navigate = useNavigate()
-  const [updateUser, setUpdateUser] = useState(null)
+  const dispatch = useDispatch()
+
+  // ✅ FIXED INITIAL STATE
+  const [updateUser, setUpdateUser] = useState({
+    name: "",
+    email: "",
+    phoneNo: "",
+    address: "",
+    city: "",
+    zipCode: "",
+    role: ""
+  })
+
   const [file, setFile] = useState(null)
-  const { user } = useSelector(store => store.user)
+
   const params = useParams()
   const userId = params.id
 
@@ -28,7 +43,6 @@ const UserInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
     const accessToken = localStorage.getItem("accessToken")
 
     try {
@@ -45,18 +59,25 @@ const UserInfo = () => {
         formData.append("file", file)
       }
 
-      await axios.put(
+      const res = await axios.put(
         `http://localhost:8080/api/v1/user/update/${userId}`,
         formData,
         {
           headers: {
-            Authorization: `Bearer ${accessToken}`
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data"
           }
         }
       )
 
+      if (res.data.success) {
+        toast.success(res.data.message)
+        dispatch(setUser(res.data.user))
+      }
+
     } catch (error) {
       console.log(error)
+      toast.error("Failed to update profile")
     }
   }
 
@@ -64,7 +85,16 @@ const UserInfo = () => {
     try {
       const res = await axios.get(`http://localhost:8080/api/v1/user/get-user/${userId}`)
       if (res.data.success) {
-        setUpdateUser(res.data.user)
+        setUpdateUser({
+          name: res.data.user?.name || "",
+          email: res.data.user?.email || "",
+          phoneNo: res.data.user?.phoneNo || "",
+          address: res.data.user?.address || "",
+          city: res.data.user?.city || "",
+          zipCode: res.data.user?.zipCode || "",
+          role: res.data.user?.role || "",
+          profilePic: res.data.user?.profilePic || ""
+        })
       }
     } catch (error) {
       console.log(error)
@@ -76,129 +106,147 @@ const UserInfo = () => {
   }, [])
 
   return (
-  <div className='pl-[350px] py-20 pr-20 bg-gray-100 min-h-screen'>
-    <div className='max-w-5xl mx-auto'>
+    <div className='pl-[350px] py-20 pr-20 bg-gray-100 min-h-screen'>
+      <div className='max-w-5xl mx-auto'>
 
-      {/* Header */}
-      <div className='flex pt-10 justify-center items-center gap-4 mb-10'>
-        <Button onClick={() => navigate(-1)} className="bg-black text-white hover:bg-gray-800 px-3 py-2">
-          <ArrowLeft size={18}/>
-        </Button>
-        <h1 className='text-2xl font-bold text-gray-800'>Update Profile</h1>
-      </div>
-
-      {/* Main Layout */}
-      <div className='flex justify-center items-start gap-20'>
-
-        {/* Profile Image */}
-        <div className="flex flex-col items-center">
-          <div className="p-[4px] rounded-full bg-pink-600">
-            <img
-              src={updateUser?.profilePic || UserLogo}
-              alt="profile"
-              className="w-44 h-44 rounded-full object-cover bg-white"
-            />
-          </div>
-
-          <Label className="mt-5 cursor-pointer bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-pink-700 transition">
-            Change Picture
-            <input
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-          </Label>
+        {/* Header */}
+        <div className='flex pt-10 justify-center items-center gap-4 mb-10'>
+          <Button onClick={() => navigate(-1)} className="bg-black text-white hover:bg-gray-800 px-3 py-2">
+            <ArrowLeft size={18} />
+          </Button>
+          <h1 className='text-2xl font-bold text-gray-800'>Update Profile</h1>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-xl p-8 w-[450px] space-y-5">
+        {/* Main Layout */}
+        <div className='flex justify-center items-start gap-20'>
 
-          
+          {/* Profile Image */}
+          <div className="flex flex-col items-center">
+            <div className="p-[4px] rounded-full bg-pink-600">
+              <img
+                src={updateUser?.profilePic || UserLogo}
+                alt="profile"
+                className="w-44 h-44 rounded-full object-cover bg-white"
+              />
+            </div>
+
+            <Label className="mt-5 cursor-pointer bg-pink-600 text-white px-6 py-2 rounded-md hover:bg-pink-700 transition">
+              Change Picture
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileChange}
+              />
+            </Label>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="bg-white shadow-lg rounded-xl p-8 w-[450px] space-y-5">
+
             <div>
               <Label className="text-sm text-gray-600">Name</Label>
               <Input
                 type="text"
                 name="name"
-                value={updateUser?.name}
+                value={updateUser?.name || ""}
                 onChange={handleChange}
-                className="mt-1"
-              />
-            </div>
-
-          <div>
-            <Label className="text-sm text-gray-600">Email</Label>
-            <Input
-              type="email"
-              name="email"
-              disabled
-              value={updateUser?.email}
-              className="mt-1 bg-gray-100"
-            />
-          </div>
-
-          <div>
-            <Label className="text-sm text-gray-600">Phone Number</Label>
-            <Input
-              type="text"
-              name="phoneNo"
-              value={updateUser?.phoneNo}
-              onChange={handleChange}
-              placeholder="Enter your Contact No"
-              className="mt-1"
-            />
-          </div>
-
-          <div>
-            <Label className="text-sm text-gray-600">Address</Label>
-            <Input
-              type="text"
-              name="address"
-              value={updateUser?.address}
-              onChange={handleChange}
-              placeholder="Enter your Address"
-              className="mt-1"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label className="text-sm text-gray-600">City</Label>
-              <Input
-                type="text"
-                name="city"
-                value={updateUser?.city}
-                onChange={handleChange}
-                placeholder="Enter your City"
                 className="mt-1"
               />
             </div>
 
             <div>
-              <Label className="text-sm text-gray-600">Zip Code</Label>
+              <Label className="text-sm text-gray-600">Email</Label>
+              <Input
+                type="email"
+                name="email"
+                disabled
+                value={updateUser?.email || ""}
+                className="mt-1 bg-gray-100"
+              />
+            </div>
+
+            <div>
+              <Label className="text-sm text-gray-600">Phone Number</Label>
               <Input
                 type="text"
-                name="zipCode"
-                value={updateUser?.zipCode}
+                name="phoneNo"
+                value={updateUser?.phoneNo || ""}
                 onChange={handleChange}
-                placeholder="Enter your ZipCode"
+                placeholder="Enter your Contact No"
                 className="mt-1"
               />
             </div>
-          </div>
 
-          <Button
-            type="submit"
-            className="w-full mt-4 bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-md"
-          >
-            Update Profile
-          </Button>
+            <div>
+              <Label className="text-sm text-gray-600">Address</Label>
+              <Input
+                type="text"
+                name="address"
+                value={updateUser?.address || ""}
+                onChange={handleChange}
+                placeholder="Enter your Address"
+                className="mt-1"
+              />
+            </div>
 
-        </form>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Label className="text-sm text-gray-600">City</Label>
+                <Input
+                  type="text"
+                  name="city"
+                  value={updateUser?.city || ""}
+                  onChange={handleChange}
+                  placeholder="Enter your City"
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label className="text-sm text-gray-600">Zip Code</Label>
+                <Input
+                  type="text"
+                  name="zipCode"
+                  value={updateUser?.zipCode || ""}
+                  onChange={handleChange}
+                  placeholder="Enter your ZipCode"
+                  className="mt-1"
+                />
+              </div>
+            </div>
+
+            <div className='flex gap-3 items-center'>
+              <Label className='block text-sm font-medium'>Role :</Label>
+              <RadioGroup
+                value={updateUser?.role || ""}
+                onValueChange={(value) => setUpdateUser({ ...updateUser, role: value })}
+                className='flex items-center'
+              >
+                <div className='flex items-center space-x-2'>
+                  <RadioGroupItem value="user" id="user" />
+                  <Label htmlFor="user">User</Label>
+                </div>
+
+                <div className='flex items-center space-x-2'>
+                  <RadioGroupItem value="admin" id="admin" />
+                  <Label htmlFor="admin">Admin</Label>
+                </div>
+              </RadioGroup>
+            </div>
+
+            <Button
+              type="submit"
+              className="w-full mt-4 bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-md"
+            >
+              Update Profile
+            </Button>
+
+          </form>
+        </div>
       </div>
     </div>
-  </div>
-)
+  )
 }
 
 export default UserInfo
