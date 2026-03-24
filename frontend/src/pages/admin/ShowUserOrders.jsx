@@ -1,8 +1,33 @@
-import React from 'react'
+import OrderCard from '@/components/OrderCard'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 
 const ShowUserOrders = () => {
+  const params = useParams()
+
+  const [userOrder, setUserOrder] = useState(null)
+
+  const getUserOrders = async() => {
+    const accessToken = localStorage.getItem("accesstoken")
+    const res = await axios.get(`http://localhost:8080/api/v1/orders/user-order/${params.userId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    })
+    if(res.data.success){
+      setUserOrder(res.data.order)
+    }
+  }
+
+  useEffect(() => {
+    getUserOrders()
+  },[])
+
   return (
-    <div>ShowUserOrders</div>
+    <div className='pl-[350px] py-20'>
+      <OrderCard userOrder={userOrder}/>
+    </div>
   )
 }
 

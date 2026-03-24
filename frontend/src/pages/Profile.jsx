@@ -10,6 +10,7 @@ import userLogo from "../assets/user.png"
 import { toast } from 'sonner'
 import axios from 'axios'
 import { setUser } from '@/redux/userSlice'
+import MyOrder from './MyOrder'
 
 
 const Profile = () => {
@@ -188,30 +189,7 @@ const [updateUser, setUpdateUser] = useState({
 
         {/* Orders Tab */}
         <TabsContent value="orders">
-          <Card>
-            <CardHeader>
-              <CardTitle>Password</CardTitle>
-              <CardDescription>
-                Change your password here. After saving, you'll be logged out.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="current">Current password</Label>
-                <Input id="current" type="password" />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="new">New password</Label>
-                <Input id="new" type="password" />
-              </div>
-            </CardContent>
-
-            <CardFooter>
-              <Button>Save password</Button>
-            </CardFooter>
-          </Card>
+          <MyOrder/>
         </TabsContent>
 
       </Tabs>

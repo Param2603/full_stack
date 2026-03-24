@@ -5,6 +5,7 @@ import userRouter from './routes/userRouter.js'
 import cors from 'cors'
 import productRouter from './routes/productRouter.js'
 import cartRouter from './routes/cartRouter.js'
+import orderRouter from './routes/orderRouter.js'
 const app = express()
 
 app.use(cors({
@@ -17,6 +18,7 @@ app.use(express.json())
 app.use('/api/v1/user', userRouter)
 app.use('/api/v1/product', productRouter)
 app.use('/api/v1/cart', cartRouter)
+app.use('/api/v1/orders', orderRouter)
 
 app.listen(process.env.PORT, (err) => {
     if (err) {
