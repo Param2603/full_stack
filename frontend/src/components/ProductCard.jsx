@@ -36,7 +36,7 @@ const ProductCard = ({product, loading}) => {
       <div className='w-full h-full aspect-square overflow-hidden'>
         {
           loading ? <Skeleton className='w-full h-full rounded-lg'/> :  <img 
-          onClick={() => navigate(`/products/${product}`)}
+          onClick={() => navigate(`/products/${product._id}`)}
           src={productImg[0]?.url} alt="" 
           className='w-full h-full transition-transform duration-300 hover:scale-105 cursor-pointer'/>
         }    

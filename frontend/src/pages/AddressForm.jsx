@@ -5,7 +5,6 @@ import { Label } from '@/components/ui/label'
 import { Separator } from '@/components/ui/separator'
 import { addAddress, deleteAddress, setCart, setSelectedAddress } from '@/redux/productSlice'
 import axios from 'axios'
-import { Contact } from 'lucide-react'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router'
@@ -44,7 +43,7 @@ const AddressForm = () => {
     const handlePayment = async() => {
         const accessToken = localStorage.getItem("accessToken")
         try {
-            const  {data} = await axios.post(`${import.meta.env.VITE_URL}/api/v1/order/create-order`, {
+            const  {data} = await axios.post(`${import.meta.env.VITE_URL}/api/v1/orders/create-order`, {
                 products: cart?.items?.map(item => ({
                     productId: item.productId._id,
                     quantity: item.quantity

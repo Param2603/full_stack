@@ -49,7 +49,7 @@ const AdminOrders = () => {
 
             <tbody>
               {orders.map((order) => (
-                <tr key={order} className='hover:bg-gray-50'>
+                <tr key={order._id} className='hover:bg-gray-50'>
                   <td className='px-4 py-2 border'>{order._id}</td>
                   
                   <td className='px-4 py-2 border'>
@@ -58,9 +58,9 @@ const AdminOrders = () => {
                   </td>
 
                   <td className='px-4 py-2 border'>
-                    {order.products.map((p, index) => (
+                    {order.products?.map((p, index) => (
                       <div key={index} className='text-sm'>
-                        {p.productName} x {p.quantity}
+                        {p.productId?.productName || p.productName} x {p.quantity}
                       </div>
                     ))}
                   </td>

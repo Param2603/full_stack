@@ -14,12 +14,14 @@ const OrderCard = ({userOrder}) => {
                 <h1 className='text-2xl font-bold'>Orders</h1>
             </div>
             {
-                userOrder?.length === 0 ? (
+                !userOrder ? (
+                    <p className='text-gray-500 text-lg'>Loading orders...</p>
+                ) : userOrder.length === 0 ? (
                     <p className='text-gray-800 space-y-6 text-2xl'>No Orders found for this user</p>
                 ) : (
                     <div className='space-y-6 w-full'>
                         {
-                            userOrder?.map((order) => (
+                            userOrder.map((order) => (
                                 <div key={order._id} className='shadow-lg rounded-2xl p-5 border border-gray-200'>
                                     {/* order header */}
                                     <div className='flex justify-between items-center mb-4'>
@@ -31,12 +33,12 @@ const OrderCard = ({userOrder}) => {
                                         <p className='text-sm text-gray-500'>
                                             Amount: {" "}
                                             <span className='font-bold'>
-                                                {order.currency} {order.amount.toFixed(2)}
+                                                {order.currency} {order.amount?.toFixed(2)}
                                             </span>
                                         </p>
                                     </div>
 
-                                    {/* user infp */}
+                                    {/* user info */}
                                     <div className='flex justify-between items-center'>
                                         <div className='mb-4'>
                                             <p className='text-sm text-gray-700'>
@@ -56,7 +58,7 @@ const OrderCard = ({userOrder}) => {
                                         <h3 className='font-medium mb-2'>Products:</h3>
                                         <ul className='space-y-2'>
                                             {
-                                                order.products.map((product, index) => (
+                                                order.products?.map((product, index) => (
                                                     <li key={index} className='flex justify-between items-center bg-gray-50 p-3 rounded-lg'>
                                                         <img onClick={() => navigate(`/products/${product?.productId?._id}`)} 
                                                         className='w-16 cursor-pointer' 

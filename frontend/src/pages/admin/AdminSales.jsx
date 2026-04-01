@@ -17,7 +17,7 @@ const AdminSales = () => {
       const accessToken = localStorage.getItem("accessToken")
 
       const res = await axios.get(
-        `${import.meta.env.VITE_URL}/api/v1/orders/sales`,
+        `${import.meta.env.VITE_URL || 'http://localhost:8080'}/api/v1/orders/sales`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`
@@ -31,7 +31,7 @@ const AdminSales = () => {
           totalProducts: res.data.totalProducts || 0,
           totalOrders: res.data.totalOrders || 0,
           totalSales: res.data.totalSales || 0,
-          salesByDate: res.data.salesByDate || []
+          salesByDate: res.data.sales || []
         })
       }
 
